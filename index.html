@@ -751,6 +751,9 @@
 
   <div class="container">
 
+    <!-- Audio Element: Jamrud Selamat Ulang Tahun (Starts at lyrics, loops continuously) -->
+    <audio id="bgMusic" src="assets/jamrud-selamat-ulang-tahun.mp3" preload="auto" loop></audio>
+
     <!-- Top Navigation -->
     <header class="top-nav">
       <div class="nav-brand">
@@ -758,8 +761,8 @@
         <span>SABILLA & GUNAWAN</span>
       </div>
       <div class="nav-actions">
-        <button class="nav-btn" id="audioToggleBtn" title="Aktifkan atau Matikan Suara">
-          <span id="audioStatusText">Suara: On</span>
+        <button class="nav-btn" id="audioToggleBtn" title="Putar atau Jeda Musik">
+          <span id="audioStatusText">Musik: On 🎵</span>
         </button>
         <button class="nav-btn primary" id="partyTriggerBtn">
           Rayakan 🎉
@@ -1006,45 +1009,31 @@
     const audioStatusText = document.getElementById('audioStatusText');
     const canvas = document.getElementById('celebrationCanvas');
     const ctx = canvas.getContext('2d');
+    const bgMusic = document.getElementById('bgMusic');
 
-    let audioActive = true;
-    let audioCtx = null;
-
-    // Web Audio Synthesizer (Pure sound, zero external dependencies)
-    function playChime() {
-      if (!audioActive) return;
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        // Pleasant celebratory chord: C5, E5, G5, C6
-        const frequencies = [523.25, 659.25, 783.99, 1046.50];
-        frequencies.forEach((f, i) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(f, audioCtx.currentTime + i * 0.07);
-
-          gain.gain.setValueAtTime(0.001, audioCtx.currentTime + i * 0.07);
-          gain.gain.exponentialRampToValueAtTime(0.15, audioCtx.currentTime + i * 0.07 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i * 0.07 + 0.45);
-
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-
-          osc.start(audioCtx.currentTime + i * 0.07);
-          osc.stop(audioCtx.currentTime + i * 0.07 + 0.5);
-        });
-      } catch (err) {
-        console.warn('Audio note available', err);
-      }
+    // Background Music Controls (Jamrud - Selamat Ulang Tahun)
+    function playMusic() {
+      if (!bgMusic) return;
+      bgMusic.play().then(() => {
+        audioStatusText.textContent = 'Musik: On 🎵';
+      }).catch((err) => {
+        console.warn('Playback error:', err);
+        audioStatusText.textContent = 'Putar Musik 🎵';
+      });
     }
 
-    // Sound toggle
+    function pauseMusic() {
+      if (!bgMusic) return;
+      bgMusic.pause();
+      audioStatusText.textContent = 'Musik: Off 🔇';
+    }
+
     audioToggleBtn.addEventListener('click', () => {
-      audioActive = !audioActive;
-      audioStatusText.textContent = audioActive ? 'Suara: On' : 'Suara: Off';
-      if (audioActive) playChime();
+      if (bgMusic.paused) {
+        playMusic();
+      } else {
+        pauseMusic();
+      }
     });
 
     // Countdown Logic
@@ -1148,6 +1137,7 @@
       gateDialog.classList.add('hidden');
       document.body.style.overflow = '';
       fireConfetti(110);
+      playMusic();
     });
 
     partyTriggerBtn.addEventListener('click', () => fireConfetti(70));
