@@ -567,6 +567,116 @@
       border-color: rgba(255, 255, 255, 0.25);
     }
 
+    /* Virtual Flower Bouquet Section */
+    .flower-section {
+      margin-bottom: 5.5rem;
+    }
+    .flower-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.25rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .bouquet-visual-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 1rem 1.6rem;
+      position: relative;
+    }
+    .bouquet-svg {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      transform-origin: bottom center;
+      animation: bouquetSway 4s ease-in-out infinite alternate;
+    }
+    @keyframes bouquetSway {
+      0% { transform: rotate(-1.5deg); }
+      100% { transform: rotate(1.5deg); }
+    }
+    .bouquet-tag {
+      margin-top: 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--accent-warm);
+      text-transform: uppercase;
+      background: rgba(14, 16, 21, 0.7);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.95rem;
+      border-radius: 6px;
+    }
+    .flower-content h3 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .flower-intro {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.4rem;
+    }
+    .flower-petals-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.4rem;
+    }
+    .petal-item {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 0.95rem;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      text-align: left;
+    }
+    .petal-item:hover, .petal-item.active {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .petal-icon {
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+    .petal-name {
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+    }
+    .petal-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 0.15rem;
+    }
+    .flower-message-box {
+      background: rgba(14, 16, 21, 0.7);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      line-height: 1.6;
+      margin-bottom: 1.4rem;
+      min-height: 60px;
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
@@ -693,6 +803,7 @@
     /* Responsive Reflow (R-03 / Mobile Skill) */
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; }
+      .flower-card { grid-template-columns: 1fr; gap: 1.8rem; }
       .col-7, .col-5, .col-4 { grid-column: span 6; }
       .col-4:last-child { grid-column: span 12; }
       .col-7 .gallery-img-box, .col-5 .gallery-img-box, .col-4 .gallery-img-box {
@@ -703,6 +814,7 @@
     @media (max-width: 640px) {
       .container { padding: 0 1rem; }
       .top-nav { padding: 0.65rem 0.95rem; }
+      .flower-petals-grid { grid-template-columns: 1fr; }
       .col-7, .col-5, .col-4 { grid-column: span 12; }
       .timer-row { gap: 0.4rem; }
       .timer-digit { font-size: 1.6rem; }
@@ -912,6 +1024,130 @@
             <p class="item-subtitle">Banyak target keren yang siap diraih bersama</p>
           </div>
         </article>
+      </div>
+    </section>
+
+    <!-- Virtual Flower Bouquet Section -->
+    <section class="flower-section" id="flowers">
+      <div class="section-head">
+        <p class="section-tag">Spesial Untukmu</p>
+        <h2 class="section-title">Bunga Virtual untuk Sabilla</h2>
+        <p class="section-desc">Buket bunga yang tidak akan pernah layu, dirangkai khusus oleh Gunawan untuk hari ulang tahunmu.</p>
+      </div>
+
+      <div class="flower-card">
+        <!-- SVG Interactive Bouquet Visual -->
+        <div class="bouquet-visual-wrap">
+          <svg class="bouquet-svg" viewBox="0 0 320 380" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Buket Bunga Virtual untuk Sabilla">
+            <!-- Stems and Foliage -->
+            <path d="M160 350 C155 280, 120 220, 100 170" stroke="#2d6a4f" stroke-width="7" stroke-linecap="round"/>
+            <path d="M160 350 C162 270, 165 200, 160 130" stroke="#40916c" stroke-width="8" stroke-linecap="round"/>
+            <path d="M160 350 C165 280, 200 220, 220 170" stroke="#2d6a4f" stroke-width="7" stroke-linecap="round"/>
+            <path d="M160 350 C150 290, 80 230, 70 190" stroke="#52b788" stroke-width="6" stroke-linecap="round"/>
+            <path d="M160 350 C170 290, 240 230, 250 190" stroke="#52b788" stroke-width="6" stroke-linecap="round"/>
+            
+            <!-- Leaves -->
+            <path d="M125 240 C100 220, 95 250, 120 260 Z" fill="#52b788"/>
+            <path d="M195 240 C220 220, 225 250, 200 260 Z" fill="#52b788"/>
+            <path d="M140 200 C110 180, 115 210, 138 215 Z" fill="#74c69d"/>
+            <path d="M180 200 C210 180, 205 210, 182 215 Z" fill="#74c69d"/>
+
+            <!-- Kraft Wrapping and Ribbon -->
+            <path d="M130 365 L160 310 L190 365 L175 375 L160 360 L145 375 Z" fill="#b08968"/>
+            <path d="M135 320 C150 315, 170 315, 185 320 L180 340 C165 335, 150 335, 140 340 Z" fill="#d4a373"/>
+            <!-- Ribbon Knot -->
+            <circle cx="160" cy="328" r="8" fill="#ff4532"/>
+            <path d="M160 328 C145 320, 135 335, 152 334" fill="#ff4532"/>
+            <path d="M160 328 C175 320, 185 335, 168 334" fill="#ff4532"/>
+            <path d="M156 334 L146 360 L154 358 L160 334 Z" fill="#e03826"/>
+            <path d="M164 334 L174 360 L166 358 L160 334 Z" fill="#e03826"/>
+
+            <!-- Flower 1: Left Tulip (Peach Pink) -->
+            <g class="flower-group" onclick="selectFlower(1)" style="cursor: pointer;">
+              <path d="M85 180 C70 150, 75 125, 95 130 C115 125, 120 150, 105 180 Z" fill="#ff758f"/>
+              <path d="M95 130 C90 145, 90 165, 95 178 C100 165, 100 145, 95 130 Z" fill="#ff4d6d"/>
+            </g>
+
+            <!-- Flower 2: Right Tulip (Coral Rose) -->
+            <g class="flower-group" onclick="selectFlower(1)" style="cursor: pointer;">
+              <path d="M235 180 C220 150, 225 125, 245 130 C265 125, 270 150, 255 180 Z" fill="#ff758f"/>
+              <path d="M245 130 C240 145, 240 165, 245 178 C250 165, 250 145, 245 130 Z" fill="#ff4d6d"/>
+            </g>
+
+            <!-- Flower 3: Golden Sunflower (Top Left) -->
+            <g class="flower-group" onclick="selectFlower(2)" style="cursor: pointer;">
+              <circle cx="115" cy="110" r="14" fill="#d97706"/>
+              <ellipse cx="115" cy="86" rx="6" ry="12" fill="#fbbf24"/>
+              <ellipse cx="115" cy="134" rx="6" ry="12" fill="#fbbf24"/>
+              <ellipse cx="91" cy="110" rx="12" ry="6" fill="#fbbf24"/>
+              <ellipse cx="139" cy="110" rx="12" ry="6" fill="#fbbf24"/>
+              <ellipse cx="98" cy="93" rx="7" ry="11" transform="rotate(-45 98 93)" fill="#f59e0b"/>
+              <ellipse cx="132" cy="127" rx="7" ry="11" transform="rotate(-45 132 127)" fill="#f59e0b"/>
+              <ellipse cx="132" cy="93" rx="7" ry="11" transform="rotate(45 132 93)" fill="#f59e0b"/>
+              <ellipse cx="98" cy="127" rx="7" ry="11" transform="rotate(45 98 127)" fill="#f59e0b"/>
+              <circle cx="115" cy="110" r="11" fill="#78350f"/>
+            </g>
+
+            <!-- Flower 4: Central Grand Rose (Signature Vermilion / Red) -->
+            <g class="flower-group" onclick="selectFlower(0)" style="cursor: pointer;">
+              <circle cx="160" cy="125" r="34" fill="#e11d48"/>
+              <path d="M135 110 C145 95, 175 95, 185 110 C195 130, 180 155, 160 155 C140 155, 125 130, 135 110 Z" fill="#f43f5e"/>
+              <path d="M142 118 C150 106, 170 106, 178 118 C185 132, 172 146, 160 146 C148 146, 135 132, 142 118 Z" fill="#fb7185"/>
+              <circle cx="160" cy="125" r="12" fill="#be123c"/>
+              <circle cx="160" cy="125" r="6" fill="#ffe4e6"/>
+            </g>
+
+            <!-- Flower 5: Top Right Blossom (Sweet Cherry Blossom) -->
+            <g class="flower-group" onclick="selectFlower(3)" style="cursor: pointer;">
+              <circle cx="210" cy="105" r="9" fill="#fbcfe8"/>
+              <ellipse cx="210" cy="90" rx="7" ry="10" fill="#f472b6"/>
+              <ellipse cx="210" cy="120" rx="7" ry="10" fill="#f472b6"/>
+              <ellipse cx="195" cy="105" rx="10" ry="7" fill="#f472b6"/>
+              <ellipse cx="225" cy="105" rx="10" ry="7" fill="#f472b6"/>
+              <circle cx="210" cy="105" r="6" fill="#fbbf24"/>
+            </g>
+          </svg>
+          <span class="bouquet-tag">Untuk Sabilla Maharani ♡</span>
+        </div>
+
+        <!-- Flower Interactive Message & Petal Options -->
+        <div class="flower-content">
+          <h3>Buket yang Selalu Mekar</h3>
+          <p class="flower-intro">
+            Bunga asli bisa layu dalam beberapa hari, tapi bunga virtual ini akan selalu ada dan mekar di sini. Klik setiap kuncup bunga di bawah untuk membaca pesan di baliknya.
+          </p>
+
+          <div class="flower-petals-grid">
+            <button class="petal-item active" id="petalBtn0" onclick="selectFlower(0)" type="button">
+              <span class="petal-icon">🌹</span>
+              <span class="petal-name">Mawar Kasih</span>
+              <span class="petal-hint">Klik untuk baca</span>
+            </button>
+            <button class="petal-item" id="petalBtn1" onclick="selectFlower(1)" type="button">
+              <span class="petal-icon">🌷</span>
+              <span class="petal-name">Tulip Ceria</span>
+              <span class="petal-hint">Klik untuk baca</span>
+            </button>
+            <button class="petal-item" id="petalBtn2" onclick="selectFlower(2)" type="button">
+              <span class="petal-icon">🌻</span>
+              <span class="petal-name">Bunga Matahari</span>
+              <span class="petal-hint">Klik untuk baca</span>
+            </button>
+            <button class="petal-item" id="petalBtn3" onclick="selectFlower(3)" type="button">
+              <span class="petal-icon">🌸</span>
+              <span class="petal-name">Bunga Abadi</span>
+              <span class="petal-hint">Klik untuk baca</span>
+            </button>
+          </div>
+
+          <div class="flower-message-box" id="flowerMessageBox">
+            "Bunga pertama untuk senyum Sabilla yang selalu menenangkan dan membawa keceriaan di setiap hari."
+          </div>
+
+          <button class="action-btn solid" id="dropPetalsBtn" type="button" style="width: 100%; justify-content: center;">
+            Hujani Kelopak Bunga 🌸
+          </button>
+        </div>
       </div>
     </section>
 
@@ -1172,6 +1408,53 @@
         closePhoto();
       }
     });
+
+    // Virtual Flower Interaction
+    const flowerNotes = [
+      "Bunga pertama untuk senyum Sabilla yang selalu menenangkan dan membawa keceriaan di setiap hari.",
+      "Bunga kedua untuk segala ketulusan dan kebaikan hatimu yang selalu aku kagumi.",
+      "Bunga ketiga untuk semangat, ketangguhan, dan kerja kerasmu yang luar biasa mengejar impian.",
+      "Bunga keempat yang tidak akan pernah layu, sama seperti doa dan rasa sayang Gunawan untuk kamu."
+    ];
+
+    function selectFlower(idx) {
+      const msgBox = document.getElementById('flowerMessageBox');
+      if (msgBox) {
+        msgBox.textContent = flowerNotes[idx] || flowerNotes[0];
+      }
+      for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById('petalBtn' + i);
+        if (btn) {
+          btn.classList.toggle('active', i === idx);
+        }
+      }
+      fireFlowerPetals(35);
+    }
+
+    function fireFlowerPetals(count = 45) {
+      const petalColors = ['#ff758f', '#ff4d6d', '#f472b6', '#fbcfe8', '#fb7185', '#fda4af'];
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: -20,
+          vx: (Math.random() - 0.5) * 6,
+          vy: Math.random() * 4 + 2,
+          w: Math.random() * 10 + 8,
+          h: Math.random() * 14 + 10,
+          color: petalColors[Math.floor(Math.random() * petalColors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 4,
+          gravity: 0.08,
+          opacity: 1
+        });
+      }
+      if (!rafId) renderConfetti();
+    }
+
+    const dropPetalsBtn = document.getElementById('dropPetalsBtn');
+    if (dropPetalsBtn) {
+      dropPetalsBtn.addEventListener('click', () => fireFlowerPetals(65));
+    }
 
     // Initial scroll lock for gate
     document.body.style.overflow = 'hidden';
