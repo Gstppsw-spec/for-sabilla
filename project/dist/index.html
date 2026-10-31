@@ -797,7 +797,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 90;
+      z-index: 150;
     }
 
     /* Responsive Reflow (R-03 / Mobile Skill) */
@@ -874,7 +874,7 @@
       </div>
       <div class="nav-actions">
         <button class="nav-btn" id="audioToggleBtn" title="Putar atau Jeda Musik">
-          <span id="audioStatusText">Musik: On 🎵</span>
+          <span id="audioStatusText">Putar Musik 🎵</span>
         </button>
         <button class="nav-btn primary" id="partyTriggerBtn">
           Rayakan 🎉
@@ -1250,12 +1250,24 @@
     // Background Music Controls (Jamrud - Selamat Ulang Tahun)
     function playMusic() {
       if (!bgMusic) return;
-      bgMusic.play().then(() => {
-        audioStatusText.textContent = 'Musik: On 🎵';
-      }).catch((err) => {
-        console.warn('Playback error:', err);
-        audioStatusText.textContent = 'Putar Musik 🎵';
-      });
+      const playPromise = bgMusic.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          audioStatusText.textContent = 'Musik: On 🎵';
+        }).catch((err) => {
+          console.warn('Playback blocked by browser policy:', err);
+          audioStatusText.textContent = 'Putar Musik 🎵';
+          const resumeAudio = () => {
+            bgMusic.play().then(() => {
+              audioStatusText.textContent = 'Musik: On 🎵';
+            }).catch(() => {});
+            document.removeEventListener('click', resumeAudio);
+            document.removeEventListener('touchstart', resumeAudio);
+          };
+          document.addEventListener('click', resumeAudio, { once: true });
+          document.addEventListener('touchstart', resumeAudio, { once: true });
+        });
+      }
     }
 
     function pauseMusic() {
@@ -1315,7 +1327,6 @@
     resizeCanvas();
 
     function fireConfetti(amount = 80) {
-      playChime();
       const palette = ['#ff4532', '#f59e0b', '#34d399', '#ffffff', '#e03826'];
       for (let i = 0; i < amount; i++) {
         particles.push({
@@ -1370,10 +1381,10 @@
 
     // Modal Events
     gateOpenBtn.addEventListener('click', () => {
+      playMusic();
       gateDialog.classList.add('hidden');
       document.body.style.overflow = '';
-      fireConfetti(110);
-      playMusic();
+      fireConfetti(120);
     });
 
     partyTriggerBtn.addEventListener('click', () => fireConfetti(70));
