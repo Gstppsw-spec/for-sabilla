@@ -735,8 +735,65 @@
     .gate-body {
       color: var(--text-muted);
       font-size: 0.95rem;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.4rem;
       line-height: 1.6;
+    }
+    .gate-countdown {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+      padding: 0.75rem 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+    }
+    .gate-time-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 44px;
+    }
+    .gate-time-num {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .gate-time-lbl {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 3px;
+    }
+    .gate-time-sep {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .gate-lock-alert {
+      margin-top: 0.85rem;
+      font-size: 0.85rem;
+      color: #fb7185;
+      min-height: 1.25rem;
+      line-height: 1.4;
+      transition: opacity 0.2s ease;
+    }
+    .gate-open-btn.locked {
+      background: #202430 !important;
+      color: #949eb5 !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      cursor: pointer;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
     }
 
     /* Fullscreen Lightbox */
@@ -838,17 +895,41 @@
   <!-- Confetti Canvas -->
   <canvas id="celebrationCanvas" aria-hidden="true"></canvas>
 
-  <!-- Opening Gate Modal (Functional, Accessible) -->
+  <!-- Opening Gate Modal (Functional, Accessible, Locked until 1 November 2026) -->
   <div class="gate-dialog" id="gateDialog" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <div class="gate-panel">
-      <p class="gate-badge">Kartu Ucapan Spesial</p>
-      <h2 class="gate-title" id="gateTitle">Halo, Sabilla! 👋</h2>
-      <p class="gate-body">
-        Ada ucapan ulang tahun spesial yang sudah disiapkan Gunawan buat kamu. Klik tombol di bawah untuk membuka kartu.
+      <p class="gate-badge" id="gateBadge" title="Klik untuk info">Kartu Ucapan Spesial</p>
+      <h2 class="gate-title" id="gateTitle">Halo, Sabilla! 🌸</h2>
+      <p class="gate-body" id="gateBody">
+        Ada ucapan ulang tahun spesial yang sudah disiapkan Gunawan buat kamu. Kartu ini terkunci dan baru bisa dibuka tepat 1 November 2026 pukul 00:00 WIB.
       </p>
-      <button class="action-btn solid" id="gateOpenBtn" type="button" style="width: 100%; justify-content: center;">
-        Buka Kartu Ucapan
+
+      <div class="gate-countdown" id="gateCountdown">
+        <div class="gate-time-unit">
+          <span class="gate-time-num" id="gateDays">00</span>
+          <span class="gate-time-lbl">Hari</span>
+        </div>
+        <span class="gate-time-sep">:</span>
+        <div class="gate-time-unit">
+          <span class="gate-time-num" id="gateHours">00</span>
+          <span class="gate-time-lbl">Jam</span>
+        </div>
+        <span class="gate-time-sep">:</span>
+        <div class="gate-time-unit">
+          <span class="gate-time-num" id="gateMins">00</span>
+          <span class="gate-time-lbl">Menit</span>
+        </div>
+        <span class="gate-time-sep">:</span>
+        <div class="gate-time-unit">
+          <span class="gate-time-num" id="gateSecs">00</span>
+          <span class="gate-time-lbl">Detik</span>
+        </div>
+      </div>
+
+      <button class="action-btn solid gate-open-btn locked" id="gateOpenBtn" type="button" style="width: 100%; justify-content: center;">
+        Belum Bisa Dibuka (Tunggu 1 November) 🔒
       </button>
+      <div class="gate-lock-alert" id="gateLockAlert" aria-live="polite"></div>
     </div>
   </div>
 
@@ -1236,9 +1317,22 @@
     // Target: 1 November 2026 00:00:00 WIB
     const birthdayDate = new Date('2026-11-01T00:00:00+07:00').getTime();
 
+    // URL Params (Support ?preview=true for Gunawan to test anytime)
+    const urlParams = new URLSearchParams(window.location.search);
+    const isPreview = urlParams.get('preview') === 'true' || urlParams.get('preview') === '1';
+
     // Elements
     const gateDialog = document.getElementById('gateDialog');
     const gateOpenBtn = document.getElementById('gateOpenBtn');
+    const gateBadge = document.getElementById('gateBadge');
+    const gateTitle = document.getElementById('gateTitle');
+    const gateBody = document.getElementById('gateBody');
+    const gateCountdown = document.getElementById('gateCountdown');
+    const gateDays = document.getElementById('gateDays');
+    const gateHours = document.getElementById('gateHours');
+    const gateMins = document.getElementById('gateMins');
+    const gateSecs = document.getElementById('gateSecs');
+    const gateLockAlert = document.getElementById('gateLockAlert');
     const partyTriggerBtn = document.getElementById('partyTriggerBtn');
     const burstBtn = document.getElementById('burstBtn');
     const audioToggleBtn = document.getElementById('audioToggleBtn');
@@ -1246,6 +1340,23 @@
     const canvas = document.getElementById('celebrationCanvas');
     const ctx = canvas.getContext('2d');
     const bgMusic = document.getElementById('bgMusic');
+
+    let isUnlocked = false;
+
+    // Easter egg: Gunawan can click the badge 3 times to unlock testing preview
+    let badgeTapCount = 0;
+    if (gateBadge) {
+      gateBadge.addEventListener('click', () => {
+        badgeTapCount++;
+        if (badgeTapCount >= 3) {
+          isUnlocked = true;
+          gateOpenBtn.classList.remove('locked');
+          gateOpenBtn.textContent = 'Buka Kartu Ucapan Sekarang 🎁';
+          if (gateLockAlert) gateLockAlert.textContent = 'Kunci dibuka khusus (mode testing Gunawan) ✨';
+          if (gateCountdown) gateCountdown.style.display = 'none';
+        }
+      });
+    }
 
     // Background Music Controls (Jamrud - Selamat Ulang Tahun)
     function playMusic() {
@@ -1284,7 +1395,7 @@
       }
     });
 
-    // Countdown Logic
+    // Countdown & Gate Lock Logic (Locked until 1 November 2026 00:00 WIB)
     function updateTimer() {
       const remaining = birthdayDate - Date.now();
       const daysEl = document.getElementById('daysVal');
@@ -1293,24 +1404,43 @@
       const secsEl = document.getElementById('secsVal');
       const statusLabel = document.getElementById('statusLabel');
 
-      if (remaining <= 0) {
-        daysEl.textContent = '00';
-        hoursEl.textContent = '00';
-        minsEl.textContent = '00';
-        secsEl.textContent = '00';
+      // Check if unlocked (Time reached or preview mode)
+      if (remaining <= 0 || isPreview || isUnlocked) {
+        isUnlocked = true;
+        if (daysEl) daysEl.textContent = '00';
+        if (hoursEl) hoursEl.textContent = '00';
+        if (minsEl) minsEl.textContent = '00';
+        if (secsEl) secsEl.textContent = '00';
         if (statusLabel) statusLabel.textContent = 'Hari Spesial Sabilla!';
+
+        if (gateBadge && !badgeTapCount) gateBadge.textContent = 'Hari Ulang Tahun Sabilla! 🎉';
+        if (gateTitle) gateTitle.textContent = 'Selamat Ulang Tahun, Sabilla! 🎂';
+        if (gateBody) {
+          gateBody.textContent = 'Waktunya telah tiba! Ada ucapan dan kenangan yang disiapkan Gunawan khusus buat kamu. Silakan dibuka.';
+        }
+        if (gateCountdown) gateCountdown.style.display = 'none';
+        gateOpenBtn.classList.remove('locked');
+        gateOpenBtn.textContent = 'Buka Kartu Ucapan Sekarang 🎁';
         return;
       }
 
+      // Calculate time remaining
       const d = Math.floor(remaining / 86400000);
       const h = Math.floor((remaining / 3600000) % 24);
       const m = Math.floor((remaining / 60000) % 60);
       const s = Math.floor((remaining / 1000) % 60);
 
-      daysEl.textContent = String(d).padStart(2, '0');
-      hoursEl.textContent = String(h).padStart(2, '0');
-      minsEl.textContent = String(m).padStart(2, '0');
-      secsEl.textContent = String(s).padStart(2, '0');
+      // Hero countdown
+      if (daysEl) daysEl.textContent = String(d).padStart(2, '0');
+      if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
+      if (minsEl) minsEl.textContent = String(m).padStart(2, '0');
+      if (secsEl) secsEl.textContent = String(s).padStart(2, '0');
+
+      // Gate modal countdown
+      if (gateDays) gateDays.textContent = String(d).padStart(2, '0');
+      if (gateHours) gateHours.textContent = String(h).padStart(2, '0');
+      if (gateMins) gateMins.textContent = String(m).padStart(2, '0');
+      if (gateSecs) gateSecs.textContent = String(s).padStart(2, '0');
     }
     updateTimer();
     setInterval(updateTimer, 1000);
@@ -1381,6 +1511,18 @@
 
     // Modal Events
     gateOpenBtn.addEventListener('click', () => {
+      const remaining = birthdayDate - Date.now();
+      // Locked check: only open when time has arrived, preview mode, or unlocked
+      if (remaining > 0 && !isPreview && !isUnlocked) {
+        if (gateLockAlert) {
+          gateLockAlert.textContent = 'Sabar sebentar ya Sabilla, kartu ini baru bisa dibuka tepat 1 November 2026 pukul 00:00 WIB! ⏳';
+          gateOpenBtn.style.animation = 'none';
+          void gateOpenBtn.offsetWidth; // trigger reflow
+          gateOpenBtn.style.animation = 'shake 0.4s ease';
+        }
+        return;
+      }
+
       playMusic();
       gateDialog.classList.add('hidden');
       document.body.style.overflow = '';
